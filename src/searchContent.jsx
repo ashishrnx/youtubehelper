@@ -5,7 +5,7 @@ import { FaSpinner } from "react-icons/fa";
 function SearchContent() {
 
   const searchContentStyle = {
-    background: "linear-gradient(to right, #3046E2, #EE4DD3)",
+    background: "linear-gradient(to right, black, #535353)",
     minHeight: "40vh",
     display: "flex",
     justifyContent: "center",
@@ -41,7 +41,7 @@ function SearchContent() {
   const [fetchedData, setFetchedData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [fetchedQuestions, setFetchedQuestions] = useState(null);
-  const [isQuestions, setIsQuestions] = useState(true);
+  const [isQuestions, setIsQuestions] = useState(false);
 
   const handleInputChange = (event) => {
       setInputValue(event.target.value);
@@ -69,13 +69,15 @@ function SearchContent() {
   };
 
   const handleQuestionsClick = () => {
-    setIsQuestions(true);
+   
+    // setIsQuestions(true);
     if(fetchedQuestions!==null)
     {
-      console.log("Not calling the api")
+      console.log("Not hitting api");
       return
     }
-    fetch("https://fastapi-ifb9.onrender.com/question/?code=" + inputValue +"&q=10") // Replace with your actual API endpoint for questions
+     setIsLoading(true);
+    fetch("https://fastapi-ifb9.onrender.com/question/?code=" + inputValue +"&q=10") 
       .then((response) => {
         if (!response.ok) {
           throw new Error("Network response was not ok");
@@ -85,11 +87,13 @@ function SearchContent() {
       .then((data) => {
         console.log(data);
         setFetchedQuestions(data["message"]); // Store the fetched questions in state
-        setIsQuestions(false);
+        setIsLoading(false)
+        // setIsQuestions(true);
       })
       .catch((error) => {
         console.error("There was a problem with the fetch operation:", error);
-        setIsQuestions(false);
+        setIsLoading(false)
+        // setIsQuestions(false);
       });
   };
 
@@ -97,9 +101,9 @@ function SearchContent() {
     <section>
       <div style={searchContentStyle}>
         <h1 style={{ fontSize: "2rem", marginBottom: "10px" }}>
-          Convert YouTube videos into chat
+          Unlocking Knowledge Through Videos
         </h1>
-        <h4>Enter the YouTube links below</h4>
+        <h4>Enter the YouTube Video code below</h4>
         <div style={{ textAlign: "center" }}>
           <div className="flex items-center justify-center">
             <input
@@ -111,7 +115,7 @@ function SearchContent() {
               onChange={handleInputChange}
             />
             <button
-              className="border border-black bg-green-500 text-white px-4 py-2 flex items-center space-x-2 rounded-md"
+              className="border border-black bg-yellow-600 text-white px-4 py-2 flex items-center space-x-2 rounded-md"
               onClick={handleSummarizeClick}
             >
               <RiFileList2Line className="h-5 w-5" />
@@ -124,18 +128,22 @@ function SearchContent() {
       <div className="flex justify-center items-center space-x-4">
         <button
           className={`font-bold text-4xl focus:outline-none ${
-            isSummary ? "text-blue-500" : "text-gray-500"
+            isSummary ? "text-black-500" : "text-gray-500"
           }`}
-          onClick={() => setIsSummary(true)}
+          onClick={() => {
+            setIsSummary(true);
+            setIsQuestions(false);
+          }}
         >
           Summary
         </button>
         <button
           className={`font-bold text-4xl focus:outline-none ${
-            isQuestions ? "text-blue-500" : "text-gray-500"
+            isQuestions ? "text-black-500" : "text-gray-500"
           }`}
           onClick={() => {
             setIsSummary(false);
+            setIsQuestions(true);
             handleQuestionsClick(); // Fetch questions when Questions button is clicked
           }}
         >
@@ -155,6 +163,11 @@ function SearchContent() {
               .replace(/\\n\\n/g, "\n\n")
               .replace(/\\n/g, "\n")}
           </p>
+        ) : isLoading ? (
+          <div className="flex justify-center items-center">
+            <p>Loading </p>
+            <FaSpinner className="animate-spin text-blue-500 ml-2" />
+          </div>
         ) : fetchedQuestions ? (
           <p style={{ whiteSpace: "pre-wrap", wordWrap: "break-word" }}>
             {JSON.stringify(fetchedQuestions)
