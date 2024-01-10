@@ -60,6 +60,7 @@ function SearchContent() {
         console.log(data);
         setFetchedData(data["message"]); // Store the fetched data in state
         setIsLoading(false);
+        setFetchedQuestions(null)
       })
       .catch((error) => {
         console.error("There was a problem with the fetch operation:", error);
@@ -69,6 +70,11 @@ function SearchContent() {
 
   const handleQuestionsClick = () => {
     setIsQuestions(true);
+    if(fetchedQuestions!==null)
+    {
+      console.log("Not calling the api")
+      return
+    }
     fetch("https://fastapi-ifb9.onrender.com/question/?code=" + inputValue +"&q=10") // Replace with your actual API endpoint for questions
       .then((response) => {
         if (!response.ok) {
