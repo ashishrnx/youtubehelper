@@ -149,7 +149,7 @@ function SearchContent() {
             handleQuestionsClick(); // Fetch questions when Questions button is clicked
           }}
         >
-          Questions
+          Q&A
         </button>
       </div>
 
