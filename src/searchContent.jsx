@@ -29,6 +29,8 @@ function SearchContent() {
     maxWidth: "700px",
     margin: "auto",
     backgroundColor: "whitesmoke",
+    maxHeight: "400px", 
+  overflowY: "auto",
     
   };
 
