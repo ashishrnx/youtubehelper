@@ -105,7 +105,7 @@ function SearchContent() {
         <h1 style={{ fontSize: "2rem", marginBottom: "10px" }}>
           Unlocking Knowledge Through Videos
         </h1>
-        <h4>Enter the YouTube Video code below</h4>
+        <h4>Enter the YouTube Video URL below</h4>
         <div style={{ textAlign: "center" }}>
           <div className="flex items-center justify-center">
             <input
