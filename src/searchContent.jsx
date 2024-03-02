@@ -2,10 +2,14 @@ import { useState, React } from "react";
 import { RiFileList2Line } from "react-icons/ri";
 import { FaSpinner } from "react-icons/fa";
 
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPaste, faTimes } from "@fortawesome/free-solid-svg-icons";
+
+
 function SearchContent() {
 
   const searchContentStyle = {
-    background: "linear-gradient(to right, #3046E2, #EE4DD3)",
+    background: "linear-gradient(to right, black, #535353)",
     minHeight: "40vh",
     display: "flex",
     justifyContent: "center",
@@ -28,9 +32,16 @@ function SearchContent() {
     padding: "20px",
     maxWidth: "700px",
     margin: "auto",
+    marginTop: "8px",
     backgroundColor: "whitesmoke",
+    maxHeight: "400px",
+    overflowY: "auto",
     
   };
+
+  const buttonStyle =
+    "border border-black bg-yellow-600 text-white px-4 py-2 flex items-center space-x-2 rounded-md";
+
 
   const paragraphStyle = {
     margin: 0,
@@ -41,11 +52,20 @@ function SearchContent() {
   const [fetchedData, setFetchedData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [fetchedQuestions, setFetchedQuestions] = useState(null);
-  const [isQuestions, setIsQuestions] = useState(true);
+  const [isQuestions, setIsQuestions] = useState(false);
 
   const handleInputChange = (event) => {
       setInputValue(event.target.value);
     };
+
+ const handlePasteClick = async () => {
+   try {
+     const clipboardData = await navigator.clipboard.readText();
+     setInputValue(clipboardData);
+   } catch (error) {
+     console.error("Error pasting from clipboard:", error);
+   }
+ };
 
   const handleSummarizeClick = () => {
     setIsLoading(true);
@@ -60,6 +80,7 @@ function SearchContent() {
         console.log(data);
         setFetchedData(data["message"]); // Store the fetched data in state
         setIsLoading(false);
+        setFetchedQuestions(null)
       })
       .catch((error) => {
         console.error("There was a problem with the fetch operation:", error);
@@ -68,8 +89,15 @@ function SearchContent() {
   };
 
   const handleQuestionsClick = () => {
-    setIsQuestions(true);
-    fetch("https://fastapi-ifb9.onrender.com/question/?code=" + inputValue +"&q=10") // Replace with your actual API endpoint for questions
+   
+    // setIsQuestions(true);
+    if(fetchedQuestions!==null)
+    {
+      console.log("Not hitting api");
+      return
+    }
+     setIsLoading(true);
+    fetch("https://fastapi-ifb9.onrender.com/question/?code=" + inputValue +"&q=10") 
       .then((response) => {
         if (!response.ok) {
           throw new Error("Network response was not ok");
@@ -79,11 +107,13 @@ function SearchContent() {
       .then((data) => {
         console.log(data);
         setFetchedQuestions(data["message"]); // Store the fetched questions in state
-        setIsQuestions(false);
+        setIsLoading(false)
+        // setIsQuestions(true);
       })
       .catch((error) => {
         console.error("There was a problem with the fetch operation:", error);
-        setIsQuestions(false);
+        setIsLoading(false)
+        // setIsQuestions(false);
       });
   };
 
@@ -91,21 +121,40 @@ function SearchContent() {
     <section>
       <div style={searchContentStyle}>
         <h1 style={{ fontSize: "2rem", marginBottom: "10px" }}>
-          Convert YouTube videos into chat
+          Unlocking Knowledge Through Videos
         </h1>
-        <h4>Enter the YouTube links below</h4>
-        <div style={{ textAlign: "center" }}>
-          <div className="flex items-center justify-center">
-            <input
-              type="text"
-              placeholder="Paste URL YouTube"
-              className="border-0 border-black rounded-lg p-2 mr-2"
-              style={inputStyle}
-              value={inputValue}
-              onChange={handleInputChange}
-            />
+        <h4>Enter the YouTube Video code below</h4>
+        <div style={{ textAlign: "center " }}>
+          <div className="flex items-center justify-center relative  ">
+            <div className="relative">
+              <input
+                type="text"
+                placeholder="Paste URL YouTube"
+                className="border-0 border-black rounded-lg p-2 pr-10 flex-grow relative"
+                style={inputStyle}
+                value={inputValue}
+                onChange={handleInputChange}
+              />
+              <button
+                className="border border-black bg-yellow-600 text-white px-4 py-2 flex items-center space-x-2 rounded-md absolute right-1 top-0.5"
+                onClick={() => {
+                  if (inputValue) {
+                    setInputValue(""); // Clear the input field if there is value
+                  } else {
+                    handlePasteClick(); // Otherwise, paste content
+                  }
+                }}
+              >
+                {inputValue ? (
+                  <FontAwesomeIcon icon={faTimes} />
+                ) : (
+                  <FontAwesomeIcon icon={faPaste} />
+                )}
+              </button>
+            </div>
+
             <button
-              className="border border-black bg-green-500 text-white px-4 py-2 flex items-center space-x-2 rounded-md"
+              className="border border-black bg-yellow-600 text-white px-4 py-2 flex items-center space-x-2 rounded-md ml-2"
               onClick={handleSummarizeClick}
             >
               <RiFileList2Line className="h-5 w-5" />
@@ -114,29 +163,32 @@ function SearchContent() {
           </div>
         </div>
       </div>
-
-      <div className="flex justify-center items-center space-x-4">
+      
+      <div className="flex justify-center items-center space-x-4 mt-2">
         <button
           className={`font-bold text-4xl focus:outline-none ${
-            isSummary ? "text-blue-500" : "text-gray-500"
+            isSummary ? "text-yellow-400" : "text-gray-500"
           }`}
-          onClick={() => setIsSummary(true)}
+          onClick={() => {
+            setIsSummary(true);
+            setIsQuestions(false);
+          }}
         >
           Summary
         </button>
         <button
           className={`font-bold text-4xl focus:outline-none ${
-            isQuestions ? "text-blue-500" : "text-gray-500"
+            isQuestions ? "text-yellow-400" : "text-gray-500"
           }`}
           onClick={() => {
             setIsSummary(false);
+            setIsQuestions(true);
             handleQuestionsClick(); // Fetch questions when Questions button is clicked
           }}
         >
-          Questions
+          Q&A
         </button>
       </div>
-
       <div style={boxStyle}>
         {isLoading ? (
           <div className="flex justify-center items-center">
@@ -149,6 +201,11 @@ function SearchContent() {
               .replace(/\\n\\n/g, "\n\n")
               .replace(/\\n/g, "\n")}
           </p>
+        ) : isLoading ? (
+          <div className="flex justify-center items-center">
+            <p>Loading </p>
+            <FaSpinner className="animate-spin text-blue-500 ml-2" />
+          </div>
         ) : fetchedQuestions ? (
           <p style={{ whiteSpace: "pre-wrap", wordWrap: "break-word" }}>
             {JSON.stringify(fetchedQuestions)
