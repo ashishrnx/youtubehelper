@@ -167,7 +167,7 @@ function SearchContent() {
       <div className="flex justify-center items-center space-x-4 mt-2">
         <button
           className={`font-bold text-4xl focus:outline-none ${
-            isSummary ? "text-yellow-400" : "text-gray-500"
+            isSummary ? "text-yellow-600" : "text-gray-500"
           }`}
           onClick={() => {
             setIsSummary(true);
@@ -178,7 +178,7 @@ function SearchContent() {
         </button>
         <button
           className={`font-bold text-4xl focus:outline-none ${
-            isQuestions ? "text-yellow-400" : "text-gray-500"
+            isQuestions ? "text-yellow-600" : "text-gray-500"
           }`}
           onClick={() => {
             setIsSummary(false);
