@@ -69,7 +69,7 @@ function SearchContent() {
 
   const handleSummarizeClick = () => {
     setIsLoading(true);
-    fetch("https://fastapi-ifb9.onrender.com/summary/?code=" + inputValue) // Replace with your actual API endpoint
+    fetch("https://helpful-monica-soorveer-39ac911c.koyeb.app/summary/?code=" + inputValue) // Replace with your actual API endpoint
       .then((response) => {
         if (!response.ok) {
           throw new Error("Network response was not ok");
@@ -97,7 +97,7 @@ function SearchContent() {
       return
     }
      setIsLoading(true);
-    fetch("https://fastapi-ifb9.onrender.com/question/?code=" + inputValue +"&q=10") 
+    fetch("https://helpful-monica-soorveer-39ac911c.koyeb.app/question/?code=" + inputValue +"&q=10") 
       .then((response) => {
         if (!response.ok) {
           throw new Error("Network response was not ok");
