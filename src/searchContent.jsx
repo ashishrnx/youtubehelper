@@ -67,7 +67,7 @@ function SearchContent() {
   const handleSummarizeClick = () => {
     setIsLoading(true);
     fetch(
-      "https://helpful-monica-soorveer-39ac911c.koyeb.app/summary/?code=" +
+      "https://competitive-leela-soorvermesra-3f4a68c8.koyeb.app/summary/?code=" +
         inputValue
     ) // Replace with your actual API endpoint
       .then((response) => {
@@ -95,7 +95,7 @@ function SearchContent() {
     }
     setIsLoading(true);
     fetch(
-      "https://helpful-monica-soorveer-39ac911c.koyeb.app/question/?code=" +
+      "https://competitive-leela-soorvermesra-3f4a68c8.koyeb.app/question/?code=" +
         inputValue +
         "&q=10"
     )
