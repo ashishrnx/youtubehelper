@@ -41,7 +41,7 @@ const SearchContent = () => {
         `https://competitive-leela-soorvermesra-3f4a68c8.koyeb.app/summary/?code=${inputValue}`
       );
       if (!response.ok) {
-        throw new Error("Network response was not ok");
+        throw new Error("Network response was not ok.");
       }
       const data = await response.json();
       setFetchedData(data.message);
